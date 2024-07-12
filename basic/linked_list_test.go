@@ -338,72 +338,221 @@ func Test_Delete(t *testing.T) {
 
 func Test_Get(t *testing.T) {
 	testCases := []struct {
-		desc string
+		desc        string
+		list        *linkedList[int]
+		pos         int
+		expected    int
+		expectedErr error
 	}{
 		{
-			desc: "with empty list",
+			desc:        "with empty list",
+			list:        &linkedList[int]{},
+			pos:         0,
+			expected:    0,
+			expectedErr: errors.New(""),
 		},
 		{
 			desc: "first position",
+			list: &linkedList[int]{
+				head: &linkedListNode[int]{
+					data: 5,
+				},
+			},
+			pos:         0,
+			expected:    5,
+			expectedErr: nil,
 		},
 		{
 			desc: "middle position",
+			list: &linkedList[int]{
+				head: &linkedListNode[int]{
+					data: 5,
+					next: &linkedListNode[int]{
+						data: 7,
+						next: &linkedListNode[int]{
+							data: 8,
+						},
+					},
+				},
+			},
+			pos:         1,
+			expected:    7,
+			expectedErr: nil,
 		},
 		{
 			desc: "last position",
+			list: &linkedList[int]{
+				head: &linkedListNode[int]{
+					data: 5,
+					next: &linkedListNode[int]{
+						data: 7,
+						next: &linkedListNode[int]{
+							data: 8,
+						},
+					},
+				},
+			},
+			pos:         2,
+			expected:    8,
+			expectedErr: nil,
 		},
 		{
 			desc: "position not in list",
+			list: &linkedList[int]{
+				head: &linkedListNode[int]{
+					data: 5,
+					next: &linkedListNode[int]{
+						data: 7,
+						next: &linkedListNode[int]{
+							data: 8,
+						},
+					},
+				},
+			},
+			pos:         3,
+			expected:    0,
+			expectedErr: errors.New(""),
 		},
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
+			val, err := tC.list.Get(tC.pos)
 
+			if tC.expectedErr != nil {
+				assert.NotNil(t, err)
+			}
+
+			assert.Equal(t, tC.expected, val)
 		})
 	}
 }
 
 func Test_Length(t *testing.T) {
 	testCases := []struct {
-		desc string
+		desc     string
+		list     *linkedList[int]
+		expected int
 	}{
 		{
-			desc: "with empty list",
+			desc:     "with empty list",
+			list:     &linkedList[int]{},
+			expected: 0,
 		},
 		{
 			desc: "with non empty list",
+			list: &linkedList[int]{
+				head: &linkedListNode[int]{
+					data: 5,
+					next: &linkedListNode[int]{
+						data: 7,
+						next: &linkedListNode[int]{
+							data: 8,
+						},
+					},
+				},
+			},
+			expected: 3,
 		},
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
+			len := tC.list.Length()
 
+			assert.Equal(t, tC.expected, len)
 		})
 	}
 }
 
 func Test_Search(t *testing.T) {
 	testCases := []struct {
-		desc string
+		desc        string
+		list        *linkedList[int]
+		data        int
+		expected    int
+		expectedErr error
 	}{
 		{
-			desc: "with empty list",
+			desc:        "with empty list",
+			list:        &linkedList[int]{},
+			data:        5,
+			expected:    0,
+			expectedErr: errors.New(""),
 		},
 		{
 			desc: "first position",
+			list: &linkedList[int]{
+				head: &linkedListNode[int]{
+					data: 6,
+					next: &linkedListNode[int]{
+						data: 8,
+					},
+				},
+			},
+			data:        6,
+			expected:    0,
+			expectedErr: nil,
 		},
 		{
 			desc: "middle position",
+			list: &linkedList[int]{
+				head: &linkedListNode[int]{
+					data: 6,
+					next: &linkedListNode[int]{
+						data: 8,
+						next: &linkedListNode[int]{
+							data: 2,
+						},
+					},
+				},
+			},
+			data:        8,
+			expected:    1,
+			expectedErr: nil,
 		},
 		{
 			desc: "last position",
+			list: &linkedList[int]{
+				head: &linkedListNode[int]{
+					data: 6,
+					next: &linkedListNode[int]{
+						data: 8,
+						next: &linkedListNode[int]{
+							data: 2,
+						},
+					},
+				},
+			},
+			data:        2,
+			expected:    2,
+			expectedErr: nil,
 		},
 		{
 			desc: "not found",
+			list: &linkedList[int]{
+				head: &linkedListNode[int]{
+					data: 6,
+					next: &linkedListNode[int]{
+						data: 8,
+						next: &linkedListNode[int]{
+							data: 2,
+						},
+					},
+				},
+			},
+			data:        9,
+			expected:    0,
+			expectedErr: errors.New(""),
 		},
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
+			pos, err := tC.list.Search(tC.data)
 
+			if tC.expectedErr != nil {
+				assert.NotNil(t, err)
+			}
+
+			assert.Equal(t, tC.expected, pos)
 		})
 	}
 }

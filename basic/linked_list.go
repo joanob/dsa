@@ -7,16 +7,16 @@ import "errors"
 // Linked lists are more efficient for insertion and deletion than arrays as nodes are not sequential in memory
 // Reading a linked list is less efficient than reading an array because access is sequential
 
-type linkedList[T any] struct {
+type linkedList[T comparable] struct {
 	head *linkedListNode[T]
 }
 
-type linkedListNode[T any] struct {
+type linkedListNode[T comparable] struct {
 	data T
 	next *linkedListNode[T]
 }
 
-func CreateLinkedList[T any]() *linkedList[T] {
+func CreateLinkedList[T comparable]() *linkedList[T] {
 	return &linkedList[T]{head: nil}
 }
 
@@ -92,16 +92,47 @@ func (list *linkedList[T]) Delete(pos int) {
 
 // Get data from selected position or an error
 func (list *linkedList[T]) Get(pos int) (T, error) {
-	return list.head.data, nil
+	if list.head == nil {
+		var val T
+		return val, errors.New("")
+	}
+
+	node := list.head
+	currentPos := 0
+	for currentPos <= pos && node != nil {
+		if currentPos == pos {
+			return node.data, nil
+		}
+		currentPos++
+		node = node.next
+	}
+
+	var val T
+	return val, errors.New("")
 }
 
 // Get the linked list length
 func (list *linkedList[T]) Length() int {
-	return 0
+	len := 0
+	node := list.head
+	for node != nil {
+		node = node.next
+		len++
+	}
+	return len
 }
 
 // Search linked list.
 // Returns the position of the data or an error
 func (list *linkedList[T]) Search(data T) (int, error) {
-	return 0, nil
+	pos := 0
+	node := list.head
+	for node != nil {
+		if data == node.data {
+			return pos, nil
+		}
+		node = node.next
+		pos++
+	}
+	return 0, errors.New("")
 }
