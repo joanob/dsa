@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_insert_sort(t *testing.T) {
+func Test_quick_sort(t *testing.T) {
 	testCases := []struct {
 		desc   string
 		length int
@@ -42,9 +42,9 @@ func Test_insert_sort(t *testing.T) {
 
 			sorted := bubble_sort(data)
 
-			insertionSorted := insertion__sort(data)
+			quickSorted := quick_sort(data)
 
-			assert.EqualValues(t, sorted, insertionSorted)
+			assert.EqualValues(t, sorted, quickSorted)
 		})
 	}
 }
